@@ -1,10 +1,10 @@
 from room import Room
+from player import Player
 
 # Declare all the rooms
 
 room = {
-    'outside':  Room("Outside Cave Entrance",
-                     "North of you, the cave mount beckons"),
+    'outside':  Room("Outside Cave Entrance", """North of you, the cave mount beckons"""),
 
     'foyer':    Room("Foyer", """Dim light filters in from the south. Dusty
 passages run north and east."""),
@@ -24,14 +24,14 @@ earlier adventurers. The only exit is to the south."""),
 
 # Link rooms together
 
-room['outside'].n_to = room['foyer']
-room['foyer'].s_to = room['outside']
-room['foyer'].n_to = room['overlook']
-room['foyer'].e_to = room['narrow']
-room['overlook'].s_to = room['foyer']
-room['narrow'].w_to = room['foyer']
-room['narrow'].n_to = room['treasure']
-room['treasure'].s_to = room['narrow']
+room['outside'].n_to = 'foyer'
+room['foyer'].s_to = 'outside'
+room['foyer'].n_to = 'overlook'
+room['foyer'].e_to = 'narrow'
+room['overlook'].s_to = 'foyer'
+room['narrow'].w_to = 'foyer'
+room['narrow'].n_to = 'treasure'
+room['treasure'].s_to = 'narrow'
 
 #
 # Main
@@ -50,14 +50,49 @@ room['treasure'].s_to = room['narrow']
 #
 # If the user enters "q", quit the game.
 
-direction = input()
+Player1 = Player("You", 'outside')
 
-while not direction == q:
-    if direction == n:
+def currentLocation():
+    return f"Your current location is the {room[Player1.current_room].name}\n{room[Player1.current_room].description}"
 
-    elif direction == w:
+print(currentLocation())
 
-    elif direction == s:
+cmd = input('Please select your action\n[n] go north\n[w] go west\n[s] go south\n[e] go east\n[q] quit\n')
 
-    elif direction == e:
+while not cmd == 'q':
+    if cmd == 'n' or cmd == 'w' or cmd == 's' or cmd == 'e':
+        if cmd == 'n':
+            try:
+                Player1.change_room(room[Player1.current_room].n_to)
+                print(currentLocation())
+            except AttributeError:
+                print('Nothing that way! Pick a different direction!')
+                pass
+        elif cmd == 'w':
+            try:
+                Player1.change_room(room[Player1.current_room].w_to)
+                print(currentLocation())
+            except AttributeError:
+                print('Nothing that way! Pick a different direction!')
+                pass
+        elif cmd == 's':
+            try:
+                Player1.change_room(room[Player1.current_room].s_to)
+                print(currentLocation())
+            except AttributeError:
+                print('Nothing that way! Pick a different direction!')
+                pass
+        elif cmd == 'e':
+            try:
+                Player1.change_room(room[Player1.current_room].e_to)
+                print(currentLocation())
+            except AttributeError:
+                print('Nothing that way! Pick a different direction!')
+                pass
+    elif cmd == 'other inputs not yet valid':
+        print('These commands dont do anything yet, wait for future updates')
+    else:
+        print('Please enter a valid command')
+
+    cmd = input('Please select your action\n[n] go north\n[w] go west\n[s] go south\n[e] go east\n[q] quit\n')
         
