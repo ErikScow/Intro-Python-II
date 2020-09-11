@@ -18,6 +18,6 @@ class Player:
         self.items.append(itemAdded)
 
     def drop_item(self, itemDropped):
-        for item in self.items:
+        for index, item in enumerate(self.items, start=0):
             if item.name == itemDropped.name:
-                del self.items[item]
+                del self.items[index]

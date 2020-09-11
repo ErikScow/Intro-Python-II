@@ -2,11 +2,11 @@ from room import Room
 from player import Player
 from item import Item
 
-items = {
-    'sword': Item('sword', 'a basic sword'),
-    'book': Item('book', 'a book that teaches how to use spells'),
-    'shield': Item('shield', 'used to block attacks'),
-}
+
+sword = Item('sword', 'a basic sword')
+book = Item('book', 'a book that teaches how to use spells')
+shield = Item('shield', 'used to block attacks')
+
 
 
 
@@ -16,18 +16,18 @@ room = {
     'outside':  Room("Outside Cave Entrance", """North of you, the cave mount beckons""", []),
 
     'foyer':    Room("Foyer", """Dim light filters in from the south. Dusty
-passages run north and east.""", [items['sword']]),
+passages run north and east.""", [sword, book]),
 
     'overlook': Room("Grand Overlook", """A steep cliff appears before you, falling
 into the darkness. Ahead to the north, a light flickers in
 the distance, but there is no way across the chasm.""", []),
 
     'narrow':   Room("Narrow Passage", """The narrow passage bends here from west
-to north. The smell of gold permeates the air.""", [items['shield']]),
+to north. The smell of gold permeates the air.""", [shield]),
 
     'treasure': Room("Treasure Chamber", """You've found the long-lost treasure
 chamber! Sadly, it has already been completely emptied by
-earlier adventurers. The only exit is to the south.""", [items['book']]),
+earlier adventurers. The only exit is to the south.""", [book]),
 }
 
 
@@ -107,13 +107,28 @@ while not cmd == 'q':
         itemsInInventory = ' '.join([str(elem) for  elem in Player1.items])
         print(f"You are holding the following items:", itemsInInventory, sep='\n')
     elif cmd == 'take':
-        itemsInRoom = room[Player1.current_room].items
-        for i in itemsInRoom:
-            if i.name == item:
-                Player1.add_item(i)
-                print(f"You picked up the {item}!")
-            else:
-                print("That item is not in this room")
+        itemsInRoom = []
+        for i in room[Player1.current_room].items:
+            itemsInRoom.append(i.name)
+        if item[0] in itemsInRoom:
+            matching = [x for x in room[Player1.current_room].items if x.name == item[0]]
+            room[Player1.current_room].remove_item(matching[0])
+            Player1.add_item(matching[0])     
+            print(f"You picked up the {item[0]}!")
+        else :
+            print("That item is not in this room")
+    elif cmd == 'drop':
+        itemsInInventory = []
+        for i in Player1.items:
+            itemsInInventory.append(i.name)
+        if item[0] in itemsInInventory:
+            matching = [x for x in Player1.items if x.name == item[0]]
+            print(matching[0])
+            room[Player1.current_room].get_item(matching[0])
+            Player1.drop_item(matching[0])
+            print(f"You dropped the {item[0]}")
+        else :
+            print("You are not holding that item")
     else:
         print('Please enter a valid command')
 
